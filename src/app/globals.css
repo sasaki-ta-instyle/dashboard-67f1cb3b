@@ -85,7 +85,7 @@ mark, .mark {
 .scene-bg {
   position: fixed;
   inset: 0;
-  z-index: 0;
+  z-index: -1;
   background: var(--color-bg);
   overflow: hidden;
   pointer-events: none;
