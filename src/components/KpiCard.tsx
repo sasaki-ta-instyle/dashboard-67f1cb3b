@@ -59,14 +59,14 @@ export default function KpiCard({
     <article
       className="flex flex-col justify-between rounded-2xl p-6 shadow-sm transition-shadow hover:shadow-md"
       style={{
-        backgroundColor: "var(--color-surface-raised, var(--color-surface-base))",
+        backgroundColor: "var(--color-surface-raised, var(--color-surface))",
         borderWidth: "1px",
         borderColor: "var(--color-border-default, transparent)",
       }}
     >
       <span
         className="text-xs font-semibold uppercase tracking-widest"
-        style={{ color: "var(--color-text-secondary)" }}
+        style={{ color: "var(--color-text-muted)" }}
       >
         {label}
       </span>
@@ -74,13 +74,13 @@ export default function KpiCard({
       <div className="mt-4 flex items-baseline gap-1.5">
         <span
           className="text-5xl font-extrabold leading-none tabular-nums"
-          style={{ color: "var(--color-text-primary)" }}
+          style={{ color: "var(--color-text)" }}
         >
           {unit === "%" ? value.toFixed(1) : value.toLocaleString()}
         </span>
         <span
           className="text-lg font-medium"
-          style={{ color: "var(--color-text-secondary)" }}
+          style={{ color: "var(--color-text-muted)" }}
         >
           {unit}
         </span>
@@ -90,14 +90,14 @@ export default function KpiCard({
         className="mt-5 flex items-center gap-1 text-sm font-medium"
         style={{
           color: isPositive
-            ? "var(--color-semantic-success)"
-            : "var(--color-semantic-error)",
+            ? "var(--color-success)"
+            : "var(--color-error)",
         }}
       >
         <TrendArrow positive={isPositive} />
         <span
           className="text-xs"
-          style={{ color: "var(--color-text-secondary)" }}
+          style={{ color: "var(--color-text-muted)" }}
         >
           {diffText}
         </span>

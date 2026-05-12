@@ -41,18 +41,18 @@ export default function Page() {
   return (
     <main
       className="min-h-screen p-6 sm:p-10"
-      style={{ backgroundColor: "var(--color-surface-base)" }}
+      style={{ backgroundColor: "var(--color-surface)" }}
     >
       <header className="mb-8">
         <h1
           className="text-2xl font-bold tracking-tight"
-          style={{ color: "var(--color-text-primary)" }}
+          style={{ color: "var(--color-text)" }}
         >
           今月の採用ダッシュボード
         </h1>
         <p
           className="mt-1 text-sm"
-          style={{ color: "var(--color-text-secondary)" }}
+          style={{ color: "var(--color-text-muted)" }}
         >
           2025年6月 時点のサマリー
         </p>
