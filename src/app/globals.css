@@ -1,26 +1,105 @@
 @import "tailwindcss";
 
+/* Liquid Glass tokens（instyle-builder と共有） */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-bg:        #EDE9E0;
+  --color-surface:   #F3F1EE;
+  --color-text:       #35362D;
+  --color-text-muted: #82837A;
+  --color-text-light: #C4C1B0;
+  --color-text-inv:   #F3F1EE;
+  --color-highlight:  #E2DD2A;
+  --color-success:    #7BB785;
+  --color-warning:    #D4772C;
+  --color-error:      #C6292C;
+  --color-info:       #38537B;
+
+  --glass-warm:    rgba(243, 241, 238, 0.58);
+  --glass-light:   rgba(255, 255, 255, 0.55);
+  --glass-tinted:  rgba(196, 193, 176, 0.42);
+
+  --glass-border-w: rgba(255, 255, 255, 0.62);
+  --glass-blur-sm:  saturate(180%) blur(16px);
+  --glass-blur:     saturate(200%) blur(24px);
+
+  --glass-shadow-sm: 0 2px 12px rgba(53,54,45,.09), 0 1px 4px rgba(53,54,45,.07);
+  --glass-shadow:    0 8px 32px rgba(53,54,45,.11), 0 2px 8px rgba(53,54,45,.08);
+  --glass-hl:        inset 0 1px 0 rgba(255,255,255,.90), inset 0 -1px 0 rgba(0,0,0,.055);
+
+  --r:      16px;
+  --r-pill: 999px;
+
+  --font-sans:    'Gen Interface JP', system-ui, sans-serif;
+  --font-display: 'Gen Interface JP Display', 'Gen Interface JP', system-ui, sans-serif;
+  --font-mono:    'JetBrains Mono', Menlo, monospace;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+* { corner-shape: superellipse(2.5); }
+
+html, body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin: 0;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.eyebrow {
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-text-muted);
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+mark, .mark {
+  background: linear-gradient(180deg, transparent 60%, var(--color-highlight) 60%);
+  padding: 0 2px;
 }
+
+.glass-panel {
+  position: relative;
+  background: rgba(243, 241, 238, .50);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border-w);
+  box-shadow: var(--glass-hl), var(--glass-shadow);
+  border-radius: 32px;
+  padding: 36px;
+}
+
+.glass-card {
+  background: rgba(243, 241, 238, .56);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
+  border: 1px solid rgba(255,255,255,.72);
+  box-shadow: var(--glass-hl), var(--glass-shadow-sm);
+  border-radius: var(--r);
+  padding: 24px;
+}
+
+.scene-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background: var(--color-bg);
+  overflow: hidden;
+  pointer-events: none;
+}
+.scene-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 72% 65% at  8%  6%, rgba(196,193,176,.58) 0%, transparent 55%),
+    radial-gradient(ellipse 55% 55% at 94% 10%, rgba(230,226,215,.65) 0%, transparent 52%),
+    radial-gradient(ellipse 52% 68% at 78% 88%, rgba(196,193,176,.42) 0%, transparent 55%),
+    radial-gradient(ellipse 66% 46% at 18% 92%, rgba(230,226,215,.52) 0%, transparent 55%),
+    radial-gradient(ellipse 42% 42% at 50% 48%, rgba(243,241,238,.32) 0%, transparent 52%);
+}
+
+.page-content { position: relative; z-index: 1; }

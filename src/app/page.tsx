@@ -1,65 +1,69 @@
-import Image from "next/image";
+import DashboardLayout from "./(dashboard)/layout";
+import { KpiCard } from "@/components/KpiCard";
+import { BarChart } from "@/components/BarChart";
+import { loadDataSource } from "@/lib/datasource";
 
-export default function Home() {
+/**
+ * サンプルダッシュボード。実プロジェクトでは ChatPane 経由でエージェントが
+ * このファイル + データソース + チャート構成を書き換える。
+ */
+export default async function Page() {
+  // CSV を読み込む（無ければ空配列でフォールバック）
+  let monthly: Array<{ month: string; applicants: number }> = [];
+  try {
+    const rows = await loadDataSource({ kind: "csv", path: "data/sample.csv" });
+    monthly = rows.map((r) => ({
+      month: String(r.month ?? ""),
+      applicants: Number(r.applicants ?? 0),
+    }));
+  } catch {
+    // 初回は data/sample.csv が無い場合がある
+    monthly = [
+      { month: "1月", applicants: 84 },
+      { month: "2月", applicants: 96 },
+      { month: "3月", applicants: 112 },
+      { month: "4月", applicants: 128 },
+      { month: "5月", applicants: 142 },
+    ];
+  }
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <DashboardLayout>
+      <header>
+        <p className="eyebrow mb-2">Overview</p>
+        <h1
+          style={{
+            fontFamily: "var(--font-display)",
+            fontWeight: 700,
+            letterSpacing: "-0.01em",
+            fontSize: 33,
+            lineHeight: 1.2,
+          }}
+        >
+          採用 KPI ダッシュボード
+        </h1>
+      </header>
+
+      <section
+        aria-label="KPI"
+        className="grid gap-4"
+        style={{ gridTemplateColumns: "repeat(4, minmax(0, 1fr))" }}
+      >
+        <KpiCard label="今月応募者" value={142} delta={18} unit="人" />
+        <KpiCard label="面談実施" value={87} delta={-3} unit="人" />
+        <KpiCard label="内定" value={12} unit="人" />
+        <KpiCard label="承諾率" value="68" unit="%" />
+      </section>
+
+      <section aria-label="月別推移">
+        <BarChart
+          title="月別応募者推移"
+          data={monthly}
+          xKey="month"
+          yKey="applicants"
+          colorVar="--color-info"
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+      </section>
+    </DashboardLayout>
   );
 }
