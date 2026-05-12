@@ -1,63 +1,107 @@
-type KpiProps = {
+type KpiCardProps = {
   label: string;
-  value: string | number;
-  /** 前期との差分。null/undefined なら表示しない */
-  delta?: number;
-  unit?: string;
+  value: number;
+  unit: string;
+  diff: number;
+  diffText: string;
 };
 
-export function KpiCard({ label, value, delta, unit }: KpiProps) {
-  const display = typeof value === "number" ? value.toLocaleString("ja-JP") : value;
-  const deltaSign = delta == null ? null : delta > 0 ? "+" : delta < 0 ? "" : "±";
-  const deltaColor =
-    delta == null
-      ? null
-      : delta > 0
-        ? "var(--color-success)"
-        : delta < 0
-          ? "var(--color-warning)"
-          : "var(--color-text-muted)";
+function TrendArrow({ positive }: { positive: boolean }) {
+  if (positive) {
+    return (
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 16 16"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          d="M8 3v10M8 3l4 4M8 3L4 7"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    );
+  }
 
   return (
-    <article className="glass-card flex flex-col gap-2" style={{ padding: 22 }}>
-      <p className="eyebrow">{label}</p>
-      <div className="flex items-baseline gap-2">
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M8 13V3M8 13l4-4M8 13L4 9"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+export default function KpiCard({
+  label,
+  value,
+  unit,
+  diff,
+  diffText,
+}: KpiCardProps) {
+  const isPositive = diff >= 0;
+
+  return (
+    <article
+      className="flex flex-col justify-between rounded-2xl p-6 shadow-sm transition-shadow hover:shadow-md"
+      style={{
+        backgroundColor: "var(--color-surface-raised, var(--color-surface-base))",
+        borderWidth: "1px",
+        borderColor: "var(--color-border-default, transparent)",
+      }}
+    >
+      <span
+        className="text-xs font-semibold uppercase tracking-widest"
+        style={{ color: "var(--color-text-secondary)" }}
+      >
+        {label}
+      </span>
+
+      <div className="mt-4 flex items-baseline gap-1.5">
         <span
-          style={{
-            fontFamily: "var(--font-display)",
-            fontSize: 33,
-            fontWeight: 700,
-            letterSpacing: "-0.01em",
-            lineHeight: 1.1,
-            color: "var(--color-text)",
-          }}
+          className="text-5xl font-extrabold leading-none tabular-nums"
+          style={{ color: "var(--color-text-primary)" }}
         >
-          {display}
+          {unit === "%" ? value.toFixed(1) : value.toLocaleString()}
         </span>
-        {unit && (
-          <span
-            style={{
-              fontSize: 13,
-              color: "var(--color-text-muted)",
-            }}
-          >
-            {unit}
-          </span>
-        )}
-      </div>
-      {delta != null && deltaSign != null && (
-        <p
-          style={{
-            fontSize: 11,
-            fontWeight: 700,
-            letterSpacing: "0.06em",
-            color: deltaColor ?? "var(--color-text-muted)",
-          }}
+        <span
+          className="text-lg font-medium"
+          style={{ color: "var(--color-text-secondary)" }}
         >
-          {deltaSign}
-          {delta} 前期比
-        </p>
-      )}
+          {unit}
+        </span>
+      </div>
+
+      <div
+        className="mt-5 flex items-center gap-1 text-sm font-medium"
+        style={{
+          color: isPositive
+            ? "var(--color-semantic-success)"
+            : "var(--color-semantic-error)",
+        }}
+      >
+        <TrendArrow positive={isPositive} />
+        <span
+          className="text-xs"
+          style={{ color: "var(--color-text-secondary)" }}
+        >
+          {diffText}
+        </span>
+      </div>
     </article>
   );
 }
